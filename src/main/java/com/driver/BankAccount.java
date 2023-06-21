@@ -35,47 +35,36 @@ public class BankAccount {
         this.balance = balance;
         this.minBalance = minBalance;
     }
-    static void findNDigitNumsUtil(int n, int sum, char out[], int index)
-    {
-        if (index > n || sum < 0)
-            return;
 
-        if (index == n)
-        {
-            if(sum == 0)
-            {
-                out[index] = '\0'   ;
-                System.out.print(out);
-                System.out.print(" ");
-            }
-            return;
-        }
-        for (int i = 0; i <= 9; i++)
-        {
-            out[index] = (char)(i + '0');
-            findNDigitNumsUtil(n, sum - i, out, index + 1);
-        }
-    }
     public String generateAccountNumber(int digits, int sum) throws Exception{
         //Each digit of an account number can lie between 0 and 9 (both inclusive)
         //Generate account number having given number of 'digits' such that the sum of digits is equal to 'sum'
         //If it is not possible, throw "Account Number can not be generated" exception
 
-        char[] out = new char[digits + 1];
-
-        for (int i = 1; i <= 9; i++)
-        {
-            out[0] = (char)(i + '0');
-            findNDigitNumsUtil(digits, sum - i, out, 1);
-        }
-        int currentSum=0;
-        for(int i=0;i< out.length;i++){
-            currentSum+= Integer.valueOf(out[i]);
-        }
-        if(currentSum!=sum){
+        if(sum>digits*9){
             throw new RuntimeException("Account Number can not be generated");
         }
-        return String.valueOf(out);
+
+        String ans = "";
+        int count = 0;
+
+        while(sum>0){
+            if(sum>=9){
+                sum-=9;
+                ans+="9";
+            }
+            else{
+                ans+=sum;
+                sum=0;
+            }
+            count++;
+        }
+
+        while(count<digits){
+            ans+="0";
+            count++;
+        }
+        return ans;
     }
 
     public void deposit(double amount) {
